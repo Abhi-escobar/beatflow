@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>WAVR</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a24;
+    --accent: #7c6aff;
+    --accent2: #ff6a9e;
+    --text: #e8e8f0;
+    --muted: #555566;
+    --border: #222230;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; min-height: 100vh; display: flex; flex-direction: column; }
+  header { padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .powered { font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+
+  .main { flex: 1; padding: 20px; max-width: 760px; margin: 0 auto; width: 100%; padding-bottom: 200px; }
+
+  .search-wrap { position: relative; margin-bottom: 14px; }
+  .search-wrap input {
+    width: 100%; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 52px 14px 18px; color: var(--text);
+    font-family: 'DM Mono', monospace; font-size: 14px; outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-wrap input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,106,255,0.15); }
+  .search-wrap input::placeholder { color: var(--muted); }
+  .search-btn {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; border-radius: 8px; width: 36px; height: 36px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+
+  .status { font-size: 11px; color: var(--muted); letter-spacing: 1px; margin-bottom: 14px; min-height: 16px; }
+
+  .tracks { display: flex; flex-direction: column; gap: 3px; }
+  .track {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 11px 14px;
+    display: flex; align-items: center; gap: 12px; cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    animation: fadeUp 0.25s ease both;
+  }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+  .track:hover, .track:active { background: var(--surface2); border-color: var(--accent); }
+  .track.active { background: var(--surface2); border-color: var(--accent); }
+  .track-num { font-size: 11px; color: var(--muted); width: 18px; text-align: center; flex-shrink: 0; }
+  .track.active .track-num { color: var(--accent); }
+  .track-thumb { width: 52px; height: 38px; border-radius: 6px; object-fit: cover; flex-shrink: 0; background: var(--surface2); }
+  .track-info { flex: 1; min-width: 0; }
+  .track-title { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .track-channel { font-size: 11px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* YouTube player - small but visible for mobile interaction */
+  #yt-container {
+    position: fixed;
+    bottom: 80px; right: 0;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 50;
+  }
+  #yt-container.active {
+    width: 160px; height: 90px;
+    opacity: 1;
+    pointer-events: auto;
+    border-radius: 8px;
+    overflow: hidden;
+    bottom: 90px; right: 12px;
+  }
+
+  /* Tap to play overlay */
+  .tap-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,15,0.88);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .tap-overlay.show { display: flex; }
+  .tap-overlay .tap-art { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; }
+  .tap-overlay .tap-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; text-align: center; padding: 0 32px; }
+  .tap-overlay .tap-channel { font-size: 12px; color: var(--muted); }
+  .tap-overlay .tap-btn {
+    margin-top: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; border-radius: 50px; padding: 16px 48px;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px;
+    color: white; cursor: pointer; letter-spacing: 0.5px;
+  }
+  .tap-overlay .tap-cancel { font-size: 12px; color: var(--muted); cursor: pointer; margin-top: 4px; }
+
+  /* Player bar */
+  .player {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(10,10,15,0.97); backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    padding: 12px 20px; z-index: 100;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .player.visible { transform: translateY(0); }
+  .player-inner { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
+  .player-top { display: flex; align-items: center; gap: 12px; }
+  .player-thumb { width: 48px; height: 36px; border-radius: 6px; object-fit: cover; flex-shrink: 0; background: var(--surface2); }
+  .player-info { flex: 1; min-width: 0; }
+  .player-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .player-channel { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .controls { display: flex; align-items: center; gap: 4px; }
+  .ctrl-btn { background: none; border: none; cursor: pointer; padding: 8px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text); }
+  .ctrl-btn.play-pause { background: linear-gradient(135deg, var(--accent), var(--accent2)); width: 40px; height: 40px; border-radius: 50%; color: white; }
+  .ctrl-btn svg { width: 18px; height: 18px; fill: currentColor; }
+  .ctrl-btn.play-pause svg { width: 20px; height: 20px; }
+  .progress-wrap { display: flex; align-items: center; gap: 10px; }
+  .time { font-size: 10px; color: var(--muted); width: 32px; }
+  .time.right { text-align: right; }
+  .progress-bar { flex: 1; height: 3px; background: var(--border); border-radius: 4px; cursor: pointer; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 4px; width: 0%; transition: width 0.4s linear; }
+
+  .empty-state { text-align: center; padding: 50px 20px; color: var(--muted); }
+  .empty-state .big { font-size: 44px; margin-bottom: 10px; }
+  .empty-state p { font-size: 12px; letter-spacing: 1px; }
+  .loading-dots { display: inline-flex; gap: 4px; align-items: center; }
+  .loading-dots span { width: 4px; height: 4px; background: var(--accent); border-radius: 50%; animation: blink 1.2s infinite; }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%,80%,100%{opacity:0.2} 40%{opacity:1} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">WAVR</div>
+  <div class="powered">YouTube</div>
+</header>
+
+<div class="main">
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="Search songs, artists..." autocomplete="off"/>
+    <button class="search-btn" onclick="doSearch()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+        <circle cx="11" cy="11" r="6"/><line x1="16.5" y1="16.5" x2="22" y2="22"/>
+      </svg>
+    </button>
+  </div>
+  <div class="status" id="status">— search anything to start —</div>
+  <div class="tracks" id="trackList">
+    <div class="empty-state">
+      <div class="big">🎵</div>
+      <p>Search for music to start playing</p>
+    </div>
+  </div>
+</div>
+
+<!-- YouTube iframe container -->
+<div id="yt-container">
+  <div id="ytPlayer"></div>
+</div>
+
+<!-- Tap to Play overlay (mobile fix) -->
+<div class="tap-overlay" id="tapOverlay">
+  <img class="tap-art" id="tapArt" src="" alt=""/>
+  <div class="tap-title" id="tapTitle"></div>
+  <div class="tap-channel" id="tapChannel"></div>
+  <button class="tap-btn" id="tapBtn" onclick="confirmPlay()">▶ Play</button>
+  <div class="tap-cancel" onclick="cancelTap()">Cancel</div>
+</div>
+
+<!-- Player bar -->
+<div class="player" id="playerBar">
+  <div class="player-inner">
+    <div class="player-top">
+      <img class="player-thumb" id="playerThumb" src="" alt=""/>
+      <div class="player-info">
+        <div class="player-title" id="playerTitle">—</div>
+        <div class="player-channel" id="playerChannel">—</div>
+      </div>
+      <div class="controls">
+        <button class="ctrl-btn" onclick="playPrev()">
+          <svg viewBox="0 0 24 24"><path d="M19 20L9 12l10-8v16zM5 4h2v16H5z"/></svg>
+        </button>
+        <button class="ctrl-btn play-pause" onclick="togglePlay()">
+          <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <button class="ctrl-btn" onclick="playNext()">
+          <svg viewBox="0 0 24 24"><path d="M5 4l10 8-10 8V4zm14 0h-2v16h2z"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <span class="time" id="currentTime">0:00</span>
+      <div class="progress-bar" onclick="seek(event)">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <span class="time right" id="totalTime">0:00</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_KEY = 'AIzaSyDGgbD0NMJwtN8DGBoPIGoo5nele_mRSmY';
+let results = [];
+let currentIdx = -1;
+let pendingIdx = -1;
+let ytPlayer = null;
+let isPlaying = false;
+let progressInterval = null;
+let playerReady = false;
+
+// Load YT IFrame API
+(function(){
+  const s = document.createElement('script');
+  s.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(s);
+})();
+
+window.onYouTubeIframeAPIReady = () => {
+  ytPlayer = new YT.Player('ytPlayer', {
+    height: '90', width: '160',
+    playerVars: { autoplay: 0, playsinline: 1, controls: 0 },
+    events: {
+      onReady: () => { playerReady = true; },
+      onStateChange: onStateChange
+    }
+  });
+};
+
+function onStateChange(e) {
+  if (e.data === YT.PlayerState.PLAYING) {
+    isPlaying = true; setPauseIcon(); startProgress();
+    document.getElementById('yt-container').classList.remove('active');
+  } else if (e.data === YT.PlayerState.PAUSED) {
+    isPlaying = false; setPlayIcon(); clearInterval(progressInterval);
+  } else if (e.data === YT.PlayerState.ENDED) {
+    playNext();
+  }
+}
+
+async function doSearch() {
+  const q = document.getElementById('searchInput').value.trim();
+  if (!q) return;
+  setStatus('<span class="loading-dots"><span></span><span></span><span></span></span> Searching...');
+  document.getElementById('trackList').innerHTML = '';
+  try {
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(q + ' song')}&type=video&maxResults=20&key=${API_KEY}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.error) { setStatus('Error: ' + data.error.message); return; }
+    results = (data.items || []).filter(i => i.id && i.id.videoId);
+    renderTracks();
+    setStatus(`${results.length} results for "${q}"`);
+  } catch(e) {
+    setStatus('Network error — try again');
+  }
+}
+
+function renderTracks() {
+  const list = document.getElementById('trackList');
+  if (!results.length) {
+    list.innerHTML = '<div class="empty-state"><div class="big">😶</div><p>No results</p></div>';
+    return;
+  }
+  list.innerHTML = results.map((item, i) => `
+    <div class="track ${i === currentIdx ? 'active' : ''}" onclick="selectTrack(${i})" style="animation-delay:${i*0.02}s">
+      <div class="track-num">${i === currentIdx ? '▶' : i+1}</div>
+      <img class="track-thumb" src="${item.snippet.thumbnails.default.url}" alt="" loading="lazy"/>
+      <div class="track-info">
+        <div class="track-title">${item.snippet.title}</div>
+        <div class="track-channel">${item.snippet.channelTitle}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectTrack(idx) {
+  pendingIdx = idx;
+  const item = results[idx];
+
+  // Show tap-to-play overlay (needed for mobile autoplay policy)
+  document.getElementById('tapArt').src = item.snippet.thumbnails.medium?.url || item.snippet.thumbnails.default.url;
+  document.getElementById('tapTitle').textContent = item.snippet.title;
+  document.getElementById('tapChannel').textContent = item.snippet.channelTitle;
+  document.getElementById('tapOverlay').classList.add('show');
+}
+
+function confirmPlay() {
+  document.getElementById('tapOverlay').classList.remove('show');
+  playTrack(pendingIdx);
+}
+
+function cancelTap() {
+  document.getElementById('tapOverlay').classList.remove('show');
+}
+
+function playTrack(idx) {
+  currentIdx = idx;
+  const item = results[idx];
+
+  document.getElementById('playerTitle').textContent = item.snippet.title;
+  document.getElementById('playerChannel').textContent = item.snippet.channelTitle;
+  document.getElementById('playerThumb').src = item.snippet.thumbnails.medium?.url || item.snippet.thumbnails.default.url;
+  document.getElementById('playerBar').classList.add('visible');
+  document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('currentTime').textContent = '0:00';
+  document.getElementById('totalTime').textContent = '0:00';
+  setStatus('Now playing: ' + item.snippet.title);
+  renderTracks();
+
+  if (ytPlayer && playerReady) {
+    ytPlayer.loadVideoById(item.id.videoId);
+    ytPlayer.playVideo();
+  }
+}
+
+function togglePlay() {
+  if (!ytPlayer || !playerReady) return;
+  if (isPlaying) {
+    ytPlayer.pauseVideo();
+  } else {
+    ytPlayer.playVideo();
+  }
+}
+
+function playNext() {
+  if (currentIdx < results.length - 1) playTrack(currentIdx + 1);
+}
+
+function playPrev() {
+  if (currentIdx > 0) playTrack(currentIdx - 1);
+}
+
+function seek(e) {
+  if (!ytPlayer || !ytPlayer.getDuration) return;
+  const ratio = e.offsetX / e.currentTarget.offsetWidth;
+  ytPlayer.seekTo(ratio * ytPlayer.getDuration(), true);
+}
+
+function startProgress() {
+  clearInterval(progressInterval);
+  progressInterval = setInterval(() => {
+    if (!ytPlayer || !ytPlayer.getCurrentTime) return;
+    const cur = ytPlayer.getCurrentTime();
+    const dur = ytPlayer.getDuration();
+    if (!dur) return;
+    document.getElementById('progressFill').style.width = (cur/dur*100) + '%';
+    document.getElementById('currentTime').textContent = fmt(cur);
+    document.getElementById('totalTime').textContent = fmt(dur);
+  }, 500);
+}
+
+function fmt(s) {
+  if (!s || isNaN(s)) return '0:00';
+  return `${Math.floor(s/60)}:${Math.floor(s%60).toString().padStart(2,'0')}`;
+}
+
+function setPlayIcon() { document.getElementById('playIcon').innerHTML = '<path d="M8 5v14l11-7z"/>'; }
+function setPauseIcon() { document.getElementById('playIcon').innerHTML = '<path d="M6 4h4v16H6zm8 0h4v16h-4z"/>'; }
+function setStatus(h) { document.getElementById('status').innerHTML = h; }
+
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doSearch();
+});
+</script>
+</body>
+</html>
