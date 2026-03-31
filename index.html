@@ -403,4 +403,9 @@ document.getElementById('searchInput').addEventListener('keydown', e => { if(e.k
 
 // Swipe down to close full player
 let touchStartY = 0;
-document.getElementById
+document.getElementById('fullPlayer').addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, {passive:true});
+document.getElementById('fullPlayer').addEventListener('touchend', e => { if (e.changedTouches[0].clientY - touchStartY > 80) closeFullPlayer(); }, {passive:true});
+</script>
+</body>
+</html>
+  
