@@ -21,23 +21,37 @@ const Search = (() => {
   function switchTab(tab) {
     currentView = tab;
 
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(`tab-${tab}`).classList.add('active');
+    // Sidebar nav active state
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    const sideBtn = document.getElementById(`tab-${tab}`);
+    if (sideBtn) sideBtn.classList.add('active');
+
+    // Mobile nav active state
+    document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
+    const mobBtn = document.getElementById(`mob-tab-${tab}`);
+    if (mobBtn) mobBtn.classList.add('active');
 
     const searchWrap = document.querySelector('.search-wrap');
     const statusEl   = el('status');
+    const viewTitle  = el('viewTitle');
+    const emptyHome  = el('emptyHome');
 
     if (tab === 'search') {
       searchWrap.style.display = '';
       statusEl.style.display   = '';
+      if (viewTitle) viewTitle.textContent = 'Search';
       renderTracks(results, Player.getCurrentIdx());
     } else if (tab === 'liked') {
       searchWrap.style.display = 'none';
       statusEl.style.display   = 'none';
+      if (viewTitle) viewTitle.textContent = 'Liked Songs';
+      if (emptyHome) emptyHome.classList.add('hidden');
       renderLiked();
     } else if (tab === 'queue') {
       searchWrap.style.display = 'none';
       statusEl.style.display   = 'none';
+      if (viewTitle) viewTitle.textContent = 'Queue';
+      if (emptyHome) emptyHome.classList.add('hidden');
       renderQueue();
     }
   }
@@ -94,11 +108,17 @@ const Search = (() => {
 
   function renderTracks(list, activeIdx) {
     const container = el('trackList');
+    const emptyHome  = el('emptyHome');
+
+    // Hide the big empty home state once we have results or a search was done
+    if (emptyHome) emptyHome.classList.add('hidden');
+
     if (!list.length) {
-      container.innerHTML = '<div class="empty-state"><div class="big">😶</div><p>No results</p></div>';
+      container.innerHTML = '<div class="empty-state"><div class="big">😶</div><p>No results found</p></div>';
       return;
     }
-    container.innerHTML = list.map((item, i) =>
+    const header = `<div class="tracks-table-header"><span>#</span><span></span><span>Title</span><span></span></div>`;
+    container.innerHTML = header + list.map((item, i) =>
       trackHTML(item, i, i === activeIdx, Storage.isLiked(item.id.videoId))
     ).join('');
   }

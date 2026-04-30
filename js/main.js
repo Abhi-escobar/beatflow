@@ -14,13 +14,33 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Enter') Search.doSearch();
   });
 
-  /* ── Tab bindings ── */
+  /* ── Sidebar nav bindings ── */
   document.getElementById('tab-search').addEventListener('click', () => Search.switchTab('search'));
   document.getElementById('tab-liked').addEventListener('click',  () => Search.switchTab('liked'));
   document.getElementById('tab-queue').addEventListener('click',  () => Search.switchTab('queue'));
 
-  /* ── Mini player click → open full ── */
-  document.getElementById('miniPlayer').addEventListener('click', () => Player.openFullPlayer());
+  /* ── Mobile nav bindings ── */
+  document.getElementById('mob-tab-search').addEventListener('click', () => {
+    Search.switchTab('search');
+    syncMobileNav('search');
+  });
+  document.getElementById('mob-tab-liked').addEventListener('click', () => {
+    Search.switchTab('liked');
+    syncMobileNav('liked');
+  });
+  document.getElementById('mob-tab-queue').addEventListener('click', () => {
+    Search.switchTab('queue');
+    syncMobileNav('queue');
+  });
+
+  function syncMobileNav(tab) {
+    document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
+    const mobBtn = document.getElementById(`mob-tab-${tab}`);
+    if (mobBtn) mobBtn.classList.add('active');
+  }
+
+  /* ── Mini player: expand button → open full player ── */
+  document.getElementById('miniExpandBtn').addEventListener('click', () => Player.openFullPlayer());
 
   /* ── Mini controls (stop propagation so click doesn't open full player) ── */
   document.getElementById('miniControls').addEventListener('click', e => e.stopPropagation());
@@ -60,5 +80,8 @@ document.addEventListener('DOMContentLoaded', () => {
   fullPlayer.addEventListener('touchend', e => {
     if (e.changedTouches[0].clientY - touchStartY > 80) Player.closeFullPlayer();
   }, { passive: true });
+
+  /* ── Show empty home on initial load ── */
+  document.getElementById('emptyHome').classList.remove('hidden');
 
 });

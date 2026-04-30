@@ -11,57 +11,86 @@
 <body>
 
 <!-- ─────────────────────────────────────────
-     HEADER
+     APP SHELL
 ───────────────────────────────────────── -->
-<header>
-  <div class="logo">BeatFlow</div>
-  <div class="powered">YouTube</div>
-</header>
+<div class="app-shell">
 
-<!-- ─────────────────────────────────────────
-     TABS
-───────────────────────────────────────── -->
-<nav class="tabs" role="tablist" aria-label="Views">
-  <button class="tab-btn active" id="tab-search" role="tab" aria-selected="true">
-    <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-    Search
-  </button>
-  <button class="tab-btn" id="tab-liked" role="tab" aria-selected="false">
-    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-    Liked
-  </button>
-  <button class="tab-btn" id="tab-queue" role="tab" aria-selected="false">
-    <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
-    Queue
-  </button>
-</nav>
+  <!-- ─── LEFT SIDEBAR (desktop) ─── -->
+  <aside class="sidebar" id="sidebar">
 
-<!-- ─────────────────────────────────────────
-     MAIN CONTENT
-───────────────────────────────────────── -->
-<main class="main" role="main">
-
-  <!-- Search -->
-  <div class="search-wrap">
-    <input type="text" id="searchInput" placeholder="Search songs, artists..." autocomplete="off" aria-label="Search music"/>
-    <button class="search-btn" id="searchBtn" aria-label="Search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
-        <circle cx="11" cy="11" r="6"/><line x1="16.5" y1="16.5" x2="22" y2="22"/>
-      </svg>
-    </button>
-  </div>
-
-  <div class="status" id="status">— search anything to start —</div>
-
-  <!-- Track list (shared container for all views) -->
-  <div class="tracks" id="trackList" role="list">
-    <div class="empty-state">
-      <div class="big">🎵</div>
-      <p>Search for music to start playing</p>
+    <!-- Logo -->
+    <div class="sidebar-logo-wrap">
+      <div class="sidebar-logo-glow"></div>
+      <div class="logo">BeatFlow</div>
     </div>
-  </div>
 
-</main>
+    <!-- Nav links -->
+    <nav class="sidebar-nav" role="tablist" aria-label="Views">
+      <button class="nav-btn active" id="tab-search" role="tab" aria-selected="true" data-tab="search">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        </span>
+        <span class="nav-label">Search</span>
+      </button>
+      <button class="nav-btn" id="tab-liked" role="tab" aria-selected="false" data-tab="liked">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </span>
+        <span class="nav-label">Liked Songs</span>
+      </button>
+      <button class="nav-btn" id="tab-queue" role="tab" aria-selected="false" data-tab="queue">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+        </span>
+        <span class="nav-label">Queue</span>
+      </button>
+    </nav>
+
+    <!-- Sidebar footer -->
+    <div class="sidebar-footer">
+      <span class="powered-by">Powered by YouTube</span>
+    </div>
+  </aside>
+
+  <!-- ─── MAIN CONTENT ─── -->
+  <div class="main-content">
+
+    <!-- Content header (inside main) -->
+    <div class="content-header" id="contentHeader">
+      <div class="view-title" id="viewTitle">Search</div>
+    </div>
+
+    <!-- Search wrap (only shown in search tab) -->
+    <div class="search-wrap" id="searchWrap">
+      <div class="search-inner">
+        <svg class="search-icon-inline" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <input type="text" id="searchInput" placeholder="What do you want to listen to?" autocomplete="off" aria-label="Search music"/>
+        <button class="search-btn" id="searchBtn" aria-label="Search">
+          <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Status bar -->
+    <div class="status" id="status"></div>
+
+    <!-- Empty state (shown when search tab has no results yet) -->
+    <div class="empty-home" id="emptyHome">
+      <div class="empty-home-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+      </div>
+      <h2 class="empty-home-title">What do you want to listen to?</h2>
+      <p class="empty-home-sub">Search for songs, artists, or anything you're in the mood for.</p>
+    </div>
+
+    <!-- Track list (shared container for all views) -->
+    <main class="main" role="main">
+      <div class="tracks-table" id="trackList" role="list"></div>
+    </main>
+
+  </div><!-- /main-content -->
+
+</div><!-- /app-shell -->
 
 <!-- ─────────────────────────────────────────
      HIDDEN YT PLAYER
@@ -69,16 +98,25 @@
 <div id="yt-container"><div id="ytPlayer"></div></div>
 
 <!-- ─────────────────────────────────────────
-     MINI PLAYER BAR
+     BOTTOM PLAYER BAR (desktop + mobile)
 ───────────────────────────────────────── -->
 <div class="mini-player" id="miniPlayer" role="region" aria-label="Mini Player">
-  <div class="mini-progress" id="miniProgress"></div>
+  <!-- Thin progress line at top -->
+  <div class="mini-progress-bar">
+    <div class="mini-progress" id="miniProgress"></div>
+  </div>
+
   <div class="mini-inner">
-    <img class="mini-thumb" id="miniThumb" src="" alt="Album art"/>
-    <div class="mini-info">
-      <div class="mini-title" id="miniTitle">—</div>
-      <div class="mini-channel" id="miniChannel">—</div>
+    <!-- Track info -->
+    <div class="mini-track-info">
+      <img class="mini-thumb" id="miniThumb" src="" alt="Album art"/>
+      <div class="mini-info">
+        <div class="mini-title" id="miniTitle">—</div>
+        <div class="mini-channel" id="miniChannel">—</div>
+      </div>
     </div>
+
+    <!-- Controls (center) -->
     <div class="mini-controls" id="miniControls">
       <button class="mini-btn" id="miniPrevBtn" aria-label="Previous">
         <svg viewBox="0 0 24 24"><path d="M19 20L9 12l10-8v16zM5 4h2v16H5z"/></svg>
@@ -88,6 +126,13 @@
       </button>
       <button class="mini-btn" id="miniNextBtn" aria-label="Next">
         <svg viewBox="0 0 24 24"><path d="M5 4l10 8-10 8V4zm14 0h-2v16h2z"/></svg>
+      </button>
+    </div>
+
+    <!-- Right side: expand icon -->
+    <div class="mini-right">
+      <button class="mini-expand-btn" id="miniExpandBtn" aria-label="Open full player">
+        <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
       </button>
     </div>
   </div>
@@ -198,6 +243,24 @@
   <button class="tap-btn" id="tapPlayBtn">▶ Play</button>
   <div class="tap-cancel" id="tapCancelBtn" role="button" tabindex="0">Cancel</div>
 </div>
+
+<!-- ─────────────────────────────────────────
+     MOBILE BOTTOM NAV
+───────────────────────────────────────── -->
+<nav class="mobile-nav" role="navigation" aria-label="Mobile navigation">
+  <button class="mobile-nav-btn active" id="mob-tab-search" data-tab="search">
+    <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+    <span>Search</span>
+  </button>
+  <button class="mobile-nav-btn" id="mob-tab-liked" data-tab="liked">
+    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    <span>Liked</span>
+  </button>
+  <button class="mobile-nav-btn" id="mob-tab-queue" data-tab="queue">
+    <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+    <span>Queue</span>
+  </button>
+</nav>
 
 <!-- ─────────────────────────────────────────
      SCRIPTS (order matters: storage → player → search → main)
