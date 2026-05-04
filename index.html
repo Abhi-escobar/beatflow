@@ -5,23 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="description" content="BeatFlow — a beautiful YouTube-powered music player with liked songs, shuffle, repeat, and queue."/>
   <title>BeatFlow — Music Player</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css?v=10"/>
 </head>
 <body>
+
+<!-- Animated background -->
+<div class="animated-bg">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+</div>
 
 <!-- ─────────────────────────────────────────
      APP SHELL
 ───────────────────────────────────────── -->
-<div class="app-shell">
+<div class="app-shell glass-panel">
 
   <!-- ─── LEFT SIDEBAR (desktop) ─── -->
-  <aside class="sidebar" id="sidebar">
+  <aside class="sidebar glass-sidebar" id="sidebar">
 
     <!-- Logo -->
     <div class="sidebar-logo-wrap">
       <div class="sidebar-logo-glow"></div>
-      <div class="logo">BeatFlow</div>
+      <div class="logo gradient-text">BeatFlow</div>
     </div>
 
     <!-- Nav links -->
@@ -48,7 +54,10 @@
 
     <!-- Sidebar footer -->
     <div class="sidebar-footer">
-      <span class="powered-by">Powered by YouTube</span>
+      <div class="powered-badge">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="color: #ff0000; margin-right: 6px;"><path d="M21.582 6.186c-.23-.86-.908-1.538-1.768-1.768C18.254 4 12 4 12 4s-6.254 0-7.814.418c-.86.23-1.538.908-1.768 1.768C2 7.746 2 12 2 12s0 4.254.418 5.814c.23.86.908 1.538 1.768 1.768C5.746 20 12 20 12 20s6.254 0 7.814-.418c.86-.23 1.538-.908 1.768-1.768C22 16.254 22 12 22 12s0-4.254-.418-5.814zM9.995 15.505V8.495L15.995 12l-6 3.505z"/></svg>
+        <span>Powered by YouTube</span>
+      </div>
     </div>
   </aside>
 
@@ -56,8 +65,8 @@
   <div class="main-content">
 
     <!-- Mobile-only logo header -->
-    <div class="mobile-header">
-      <div class="logo">BeatFlow</div>
+    <div class="mobile-header glass-header">
+      <div class="logo gradient-text">BeatFlow</div>
     </div>
 
 
@@ -68,10 +77,10 @@
 
     <!-- Search wrap (only shown in search tab) -->
     <div class="search-wrap" id="searchWrap">
-      <div class="search-inner">
+      <div class="search-inner glass-search">
         <svg class="search-icon-inline" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
         <input type="text" id="searchInput" placeholder="What do you want to listen to?" autocomplete="off" aria-label="Search music"/>
-        <button class="search-btn" id="searchBtn" aria-label="Search">
+        <button class="search-btn neon-pulse" id="searchBtn" aria-label="Search">
           <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
         </button>
       </div>
@@ -82,10 +91,15 @@
 
     <!-- Empty state (shown when search tab has no results yet) -->
     <div class="empty-home" id="emptyHome">
-      <div class="empty-home-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+      <div class="empty-home-icon glass-icon">
+        <div class="eq-bars">
+          <div class="eq-bar"></div>
+          <div class="eq-bar"></div>
+          <div class="eq-bar"></div>
+          <div class="eq-bar"></div>
+        </div>
       </div>
-      <h2 class="empty-home-title">What do you want to listen to?</h2>
+      <h2 class="empty-home-title gradient-text-lg">What do you want to listen to?</h2>
       <p class="empty-home-sub">Search for songs, artists, or anything you're in the mood for.</p>
     </div>
 
@@ -106,10 +120,10 @@
 <!-- ─────────────────────────────────────────
      BOTTOM PLAYER BAR (desktop + mobile)
 ───────────────────────────────────────── -->
-<div class="mini-player" id="miniPlayer" role="region" aria-label="Mini Player">
+<div class="mini-player glass-player" id="miniPlayer" role="region" aria-label="Mini Player">
   <!-- Thin progress line at top -->
   <div class="mini-progress-bar">
-    <div class="mini-progress" id="miniProgress"></div>
+    <div class="mini-progress gradient-progress" id="miniProgress"></div>
   </div>
 
   <div class="mini-inner">
@@ -124,20 +138,20 @@
 
     <!-- Controls (center) -->
     <div class="mini-controls" id="miniControls">
-      <button class="mini-btn" id="miniPrevBtn" aria-label="Previous">
+      <button class="mini-btn hover-glow" id="miniPrevBtn" aria-label="Previous">
         <svg viewBox="0 0 24 24"><path d="M19 20L9 12l10-8v16zM5 4h2v16H5z"/></svg>
       </button>
-      <button class="mini-btn pp" id="miniPlayBtn" aria-label="Play / Pause">
+      <button class="mini-btn pp neon-pulse" id="miniPlayBtn" aria-label="Play / Pause">
         <svg id="miniPlayIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
       </button>
-      <button class="mini-btn" id="miniNextBtn" aria-label="Next">
+      <button class="mini-btn hover-glow" id="miniNextBtn" aria-label="Next">
         <svg viewBox="0 0 24 24"><path d="M5 4l10 8-10 8V4zm14 0h-2v16h2z"/></svg>
       </button>
     </div>
 
     <!-- Right side: expand icon -->
     <div class="mini-right">
-      <button class="mini-expand-btn" id="miniExpandBtn" aria-label="Open full player">
+      <button class="mini-expand-btn hover-glow" id="miniExpandBtn" aria-label="Open full player">
         <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
       </button>
     </div>
@@ -150,6 +164,7 @@
 <div class="full-player" id="fullPlayer" role="dialog" aria-label="Full Player" aria-modal="true">
   <div class="fp-bg"></div>
   <div class="fp-bg-art" id="fpBgArt"></div>
+  <div class="fp-bg-overlay glass-overlay"></div>
 
   <div class="fp-inner">
 
@@ -158,16 +173,16 @@
 
     <!-- Top bar -->
     <div class="fp-topbar">
-      <button class="fp-down" id="fpDownBtn" aria-label="Close full player">
+      <button class="fp-down hover-glow" id="fpDownBtn" aria-label="Close full player">
         <svg viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
       </button>
-      <div class="fp-label">Now Playing</div>
+      <div class="fp-label gradient-text">Now Playing</div>
       <div style="width:32px"></div>
     </div>
 
     <!-- Album Art -->
     <div class="fp-art-wrap">
-      <img class="fp-art" id="fpArt" src="" alt="Album art"/>
+      <img class="fp-art glass-image" id="fpArt" src="" alt="Album art"/>
     </div>
 
     <!-- Info + Like -->
@@ -177,14 +192,14 @@
         <div class="fp-channel" id="fpChannel">—</div>
       </div>
       <button class="fp-like-btn" id="fpLikeBtn" aria-label="Like" title="Like">
-        <svg viewBox="0 0 24 24"><path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/></svg>
       </button>
     </div>
 
     <!-- Progress bar -->
     <div class="fp-progress-wrap">
       <div class="fp-bar" id="fpBar" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="100">
-        <div class="fp-fill" id="fpFill"></div>
+        <div class="fp-fill gradient-progress" id="fpFill"></div>
       </div>
       <div class="fp-times">
         <span id="fpCurrent">0:00</span>
@@ -195,34 +210,34 @@
     <!-- Main Controls -->
     <div class="fp-controls">
       <!-- Shuffle -->
-      <button class="fp-btn" id="shuffleBtn" aria-label="Shuffle" title="Shuffle">
+      <button class="fp-btn hover-glow" id="shuffleBtn" aria-label="Shuffle" title="Shuffle">
         <svg viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
       </button>
 
       <!-- Prev -->
-      <button class="fp-btn" id="fpPrevBtn" aria-label="Previous">
+      <button class="fp-btn hover-glow" id="fpPrevBtn" aria-label="Previous">
         <svg viewBox="0 0 24 24"><path d="M19 20L9 12l10-8v16zM5 4h2v16H5z"/></svg>
       </button>
 
       <!-- Play / Pause -->
-      <button class="fp-btn big" id="fpPlayBtn" aria-label="Play / Pause">
+      <button class="fp-btn big neon-pulse" id="fpPlayBtn" aria-label="Play / Pause">
         <svg id="fpPlayIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
       </button>
 
       <!-- Next -->
-      <button class="fp-btn" id="fpNextBtn" aria-label="Next">
+      <button class="fp-btn hover-glow" id="fpNextBtn" aria-label="Next">
         <svg viewBox="0 0 24 24"><path d="M5 4l10 8-10 8V4zm14 0h-2v16h2z"/></svg>
       </button>
 
       <!-- Repeat -->
-      <button class="fp-btn" id="repeatBtn" aria-label="Repeat" title="Repeat">
+      <button class="fp-btn hover-glow" id="repeatBtn" aria-label="Repeat" title="Repeat">
         <svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
       </button>
     </div>
 
     <!-- Volume Row -->
     <div class="fp-volume-row">
-      <button class="fp-vol-icon" id="volIconBtn" aria-label="Mute / Unmute">
+      <button class="fp-vol-icon hover-glow" id="volIconBtn" aria-label="Mute / Unmute">
         <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
       </button>
       <input
@@ -242,18 +257,18 @@
 <!-- ─────────────────────────────────────────
      TAP OVERLAY (confirm before play)
 ───────────────────────────────────────── -->
-<div class="tap-overlay" id="tapOverlay" role="dialog" aria-modal="true" aria-label="Confirm play">
-  <img class="tap-art" id="tapArt" src="" alt=""/>
-  <div class="tap-title" id="tapTitle"></div>
+<div class="tap-overlay glass-overlay" id="tapOverlay" role="dialog" aria-modal="true" aria-label="Confirm play">
+  <img class="tap-art glass-image" id="tapArt" src="" alt=""/>
+  <div class="tap-title gradient-text" id="tapTitle"></div>
   <div class="tap-ch" id="tapCh"></div>
-  <button class="tap-btn" id="tapPlayBtn">▶ Play</button>
-  <div class="tap-cancel" id="tapCancelBtn" role="button" tabindex="0">Cancel</div>
+  <button class="tap-btn neon-pulse" id="tapPlayBtn">▶ Play</button>
+  <div class="tap-cancel hover-glow" id="tapCancelBtn" role="button" tabindex="0">Cancel</div>
 </div>
 
 <!-- ─────────────────────────────────────────
      MOBILE BOTTOM NAV
 ───────────────────────────────────────── -->
-<nav class="mobile-nav" role="navigation" aria-label="Mobile navigation">
+<nav class="mobile-nav glass-nav" role="navigation" aria-label="Mobile navigation">
   <button class="mobile-nav-btn active" id="mob-tab-search" data-tab="search">
     <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
     <span>Search</span>
@@ -271,10 +286,10 @@
 <!-- ─────────────────────────────────────────
      SCRIPTS (order matters: storage → player → search → main)
 ───────────────────────────────────────── -->
-<script src="js/storage.js"></script>
-<script src="js/player.js"></script>
-<script src="js/search.js"></script>
-<script src="js/main.js"></script>
+<script src="js/storage.js?v=2"></script>
+<script src="js/player.js?v=3"></script>
+<script src="js/search.js?v=3"></script>
+<script src="js/main.js?v=4"></script>
 
 </body>
 </html>

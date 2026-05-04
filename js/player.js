@@ -102,7 +102,12 @@ const Player = (() => {
     if (!queue.length || idx < 0 || idx >= queue.length) return;
     currentIdx = idx;
     const item  = queue[idx];
-    const thumb = item.snippet.thumbnails.medium?.url || item.snippet.thumbnails.default.url;
+    const t = item.snippet.thumbnails;
+    const thumb = (t.maxres && t.maxres.url) || 
+                  (t.standard && t.standard.url) || 
+                  (t.high && t.high.url) || 
+                  (t.medium && t.medium.url) || 
+                  t.default.url;
     const vid   = item.id.videoId;
 
     // Mini player

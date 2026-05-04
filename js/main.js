@@ -39,8 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mobBtn) mobBtn.classList.add('active');
   }
 
-  /* ── Mini player: expand button → open full player ── */
+  /* ── Mini player: click to open full player ── */
   document.getElementById('miniExpandBtn').addEventListener('click', () => Player.openFullPlayer());
+  document.getElementById('miniPlayer').addEventListener('click', () => Player.openFullPlayer());
 
   /* ── Mini controls (stop propagation so click doesn't open full player) ── */
   document.getElementById('miniControls').addEventListener('click', e => e.stopPropagation());

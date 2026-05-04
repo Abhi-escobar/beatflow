@@ -88,14 +88,19 @@ const Search = (() => {
   }
 
   function trackHTML(item, idx, isActive, isLiked, fromLiked = false) {
-    const thumb = item.snippet.thumbnails.medium?.url || item.snippet.thumbnails.default.url;
+    const t = item.snippet.thumbnails;
+    const thumb = (t.maxres && t.maxres.url) || 
+                  (t.standard && t.standard.url) || 
+                  (t.high && t.high.url) || 
+                  (t.medium && t.medium.url) || 
+                  t.default.url;
     const vid   = item.id.videoId;
     const clickFn = fromLiked ? `Search.selectFromLiked('${vid}')` : `Search.selectTrack(${idx})`;
 
     return `
       <div class="track ${isActive ? 'active' : ''}" data-vid="${vid}" style="animation-delay:${idx * 0.02}s">
         <div class="track-num" onclick="${clickFn}">${isActive ? '▶' : idx + 1}</div>
-        <img class="track-thumb" src="${item.snippet.thumbnails.default.url}" alt="" loading="lazy" onclick="${clickFn}"/>
+        <img class="track-thumb" src="${thumb}" alt="" loading="lazy" onclick="${clickFn}"/>
         <div class="track-info" onclick="${clickFn}">
           <div class="track-title">${escapeHTML(item.snippet.title)}</div>
           <div class="track-channel">${escapeHTML(item.snippet.channelTitle)}</div>
@@ -171,23 +176,19 @@ const Search = (() => {
   function selectTrack(idx) {
     const item = results[idx];
     if (!item) return;
-    showTapOverlay(item, () => {
-      Player.setQueue(results);
-      Player.playTrack(idx);
-      Player.openFullPlayer();
-    });
+    Player.setQueue(results);
+    Player.playTrack(idx);
+    Player.openFullPlayer();
   }
 
   function selectFromLiked(videoId) {
     const liked = Storage.getAllLiked();
     const item  = liked.find(t => t.id.videoId === videoId);
     if (!item) return;
-    showTapOverlay(item, () => {
-      Player.setQueue(liked);
-      const idx = liked.findIndex(t => t.id.videoId === videoId);
-      Player.playTrack(idx);
-      Player.openFullPlayer();
-    });
+    Player.setQueue(liked);
+    const idx = liked.findIndex(t => t.id.videoId === videoId);
+    Player.playTrack(idx);
+    Player.openFullPlayer();
   }
 
   /* ── Like toggle ── */
